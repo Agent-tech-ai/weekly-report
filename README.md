@@ -10,6 +10,9 @@ weekly-report/
   config/weekly_report.json      每周要填写的内容
   scripts/generate_report.py     生成 PDF / DOCX 的脚本
   outputs/                       生成后的周报文件
+  weekly_reports/
+    monday_plans/                周一计划版周报
+    friday_results/              周五结果版周报
   examples/sample_polished_report.pdf
 ```
 
@@ -42,7 +45,7 @@ weekly-report/
 "current_count": "完成 6 轮移动测试"
 ```
 
-5. 生成周报：
+5. 生成临时预览版周报：
 
 ```bash
 python3 scripts/generate_report.py
@@ -55,6 +58,46 @@ Agentech_周工作汇报_Wesley_2026-06-15_to_2026-06-19.pdf
 Agentech_周工作汇报_Wesley_2026-06-15_to_2026-06-19.docx
 ```
 
+## 周一计划版和周五结果版
+
+周一做计划版：
+
+```bash
+python3 scripts/generate_report.py --stage monday
+```
+
+文件会放到：
+
+```text
+weekly_reports/monday_plans/
+```
+
+文件名会包含 `Monday_Plan`：
+
+```text
+Agentech_周工作汇报_Wesley_Monday_Plan_2026-06-15_to_2026-06-19.pdf
+Agentech_周工作汇报_Wesley_Monday_Plan_2026-06-15_to_2026-06-19.docx
+```
+
+周五做最终结果版：
+
+```bash
+python3 scripts/generate_report.py --stage friday
+```
+
+文件会放到：
+
+```text
+weekly_reports/friday_results/
+```
+
+文件名会包含 `Friday_Results`：
+
+```text
+Agentech_周工作汇报_Wesley_Friday_Results_2026-06-15_to_2026-06-19.pdf
+Agentech_周工作汇报_Wesley_Friday_Results_2026-06-15_to_2026-06-19.docx
+```
+
 ## 以后你可以直接这样跟 Codex 说
 
 ```text
@@ -62,6 +105,18 @@ Agentech_周工作汇报_Wesley_2026-06-15_to_2026-06-19.docx
 ```
 
 Codex 会更新 `config/weekly_report.json` 并重新生成 PDF / DOCX。
+
+也可以直接说：
+
+```text
+帮我生成这周的周一计划版。
+```
+
+或者：
+
+```text
+这是周五结果：摄像头标定 80%，Tilt 测试完成 10 轮，自主移动还在调试。帮我生成周五结果版。
+```
 
 ## 安装依赖
 

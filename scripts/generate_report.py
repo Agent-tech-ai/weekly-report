@@ -34,6 +34,7 @@ from reportlab.platypus import (
 ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_CONFIG = ROOT / "config" / "weekly_report.json"
 DEFAULT_OUTPUT_DIR = ROOT / "outputs"
+WEEKLY_REPORTS_DIR = ROOT / "weekly_reports"
 
 NAVY = colors.HexColor("#0B2545")
 BLUE = colors.HexColor("#2F80ED")
@@ -53,12 +54,26 @@ def slug_date(text):
     return text.replace("/", "-").replace(" ", "")
 
 
-def output_basename(config):
+def output_basename(config, stage=None):
     company = config.get("company", "Agentech")
     reporter = config.get("reporter", "Wesley")
     start = slug_date(config["period"]["start"])
     end = slug_date(config["period"]["end"])
+    stage_label = {
+        "monday": "Monday_Plan",
+        "friday": "Friday_Results",
+    }.get(stage)
+    if stage_label:
+        return f"{company}_周工作汇报_{reporter}_{stage_label}_{start}_to_{end}"
     return f"{company}_周工作汇报_{reporter}_{start}_to_{end}"
+
+
+def default_output_dir(stage):
+    if stage == "monday":
+        return WEEKLY_REPORTS_DIR / "monday_plans"
+    if stage == "friday":
+        return WEEKLY_REPORTS_DIR / "friday_results"
+    return DEFAULT_OUTPUT_DIR
 
 
 def find_existing(paths):
@@ -456,13 +471,18 @@ def build_docx(config, output_path):
 def main():
     parser = argparse.ArgumentParser(description="Generate Agentech weekly report PDF and DOCX.")
     parser.add_argument("--config", default=str(DEFAULT_CONFIG), help="Path to weekly_report.json")
-    parser.add_argument("--output-dir", default=str(DEFAULT_OUTPUT_DIR), help="Output directory")
+    parser.add_argument(
+        "--stage",
+        choices=["monday", "friday"],
+        help="Use monday for planning drafts or friday for final result reports.",
+    )
+    parser.add_argument("--output-dir", help="Output directory. Defaults to outputs/ or weekly_reports/<stage>/")
     args = parser.parse_args()
 
     config = load_config(args.config)
-    output_dir = Path(args.output_dir)
+    output_dir = Path(args.output_dir) if args.output_dir else default_output_dir(args.stage)
     output_dir.mkdir(parents=True, exist_ok=True)
-    base = output_basename(config)
+    base = output_basename(config, args.stage)
     pdf_path = output_dir / f"{base}.pdf"
     docx_path = output_dir / f"{base}.docx"
 
