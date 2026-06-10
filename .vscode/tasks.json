@@ -1,0 +1,19 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Generate Monday Plan",
+      "type": "shell",
+      "command": "${workspaceFolder}/.venv/bin/python scripts/generate_report.py --stage monday",
+      "group": "build",
+      "problemMatcher": []
+    },
+    {
+      "label": "Generate Friday Results",
+      "type": "shell",
+      "command": "${workspaceFolder}/.venv/bin/python scripts/generate_report.py --stage friday",
+      "group": "build",
+      "problemMatcher": []
+    }
+  ]
+}

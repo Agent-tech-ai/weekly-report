@@ -1,0 +1,7 @@
+{
+  "python.defaultInterpreterPath": "${workspaceFolder}/.venv/bin/python",
+  "python.analysis.typeCheckingMode": "basic",
+  "files.encoding": "utf8",
+  "files.trimTrailingWhitespace": true,
+  "git.autofetch": true
+}
